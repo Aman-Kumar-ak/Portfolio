@@ -1,5 +1,8 @@
 ## Aman Kumar • Portfolio
 
+### Live
+- Frontend: https://aman-kumar-ak.vercel.app/
+
 A modern personal portfolio with a white canvas, soft warm accents, and category‑driven content. The homepage features alternating Highlight rows (text + media) for MERN, UI/UX, and Android; an Explore Categories grid; and a capsule bottom navigation.
 
 ### Tech Stack
@@ -101,15 +104,26 @@ Layout and highlight styles are in `frontend/src/styles/global.css`:
 ---
 
 ## Deployment
-You can deploy the frontend on Vercel/Netlify and the backend on Render/Fly/Heroku.
+Two Vercel projects from the same repo.
 
-1) Build frontend
+1) Backend (Root Directory: `backend/`)
+   - No build command required
+   - Vercel auto‑detects `backend/api` serverless functions
+   - Root `/` rewrites to `/api` and shows “Portfolio API is running.”
+
+2) Frontend (Root Directory: `frontend/`)
+   - Build command: `npm run build`
+   - Output directory: `dist`
+   - Env var: `VITE_API_BASE_URL=https://portfolio-amankumar-backend.vercel.app`
+
+Local dev
 ```bash
-cd frontend
-npm run build
+# root
+npm run install:all
+npm run dev
+# Frontend: http://localhost:5173 (proxied to backend)
+# Backend:  http://localhost:5000/api/*
 ```
-2) Serve `frontend/dist` from your host (or let Vercel/Netlify handle it)
-3) Deploy the Express API; ensure the frontend is configured to use the correct API URL if it differs from `http://localhost:5000`.
 
 ---
 
