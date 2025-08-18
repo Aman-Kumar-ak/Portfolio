@@ -8,17 +8,30 @@ export default function About(){
 
   return (
     <div>
-      {/* Hero Section simplified on white background (no extra boxed container) */}
+      {/* Hero Section: centered greeting with body grid */}
       <section className="hero">
-        <div>
-          <div className="pill" style={{marginBottom:12}}>Hello, I'm Aman</div>
-          <h1 style={{margin:'8px 0 12px 0'}}>Building full‑stack apps, crafting interfaces, and exploring ideas.</h1>
-          <p style={{color:'var(--color-muted)'}}>MERN • UI/UX • Android • Data Annotation • Business Ideas</p>
-          <div style={{display:'flex', gap:12, marginTop:18}}>
-            <Link to="/hackathons" className="pill">Hackathons</Link>
+        <h1 className="hero-title">Hello, I'm Aman</h1>
+        <div className="hero-body">
+          <div>
+            <h2 style={{margin:'8px 0 12px 0', fontSize:'clamp(22px, 3.2vw, 36px)'}}>Building full‑stack apps, crafting interfaces, and exploring ideas.</h2>
+
+            <div className="badge-row">
+              <span className="pill">Design Systems</span>
+              <span className="pill">Accessibility</span>
+              <span className="pill">Prototyping</span>
+              <span className="pill">Performance</span>
+              <span className="pill">TypeScript/React</span>
+            </div>
+
+            <div className="cta">
+              <Link to="/hackathons" className="btn">Hackathons</Link>
+              <a href="#featured" className="pill">Featured work ↓</a>
+            </div>
+          </div>
+          <div className="hero-media">
+            <img className="photo" src="/hero-image/aman.jpg" alt="Aman portrait" />
           </div>
         </div>
-        <img src="/highlight/hero-placeholder.svg" alt="Aman portrait placeholder" />
       </section>
 
       {/* Highlights Section redesigned as alternating media/text */}

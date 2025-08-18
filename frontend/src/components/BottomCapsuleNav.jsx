@@ -24,7 +24,8 @@ export default function BottomCapsuleNav(){
     <div
       style={{
         position:'fixed', left:'50%', transform:'translateX(-50%)', bottom:18, zIndex:60,
-        background:'var(--color-surface)',
+        background:'rgba(255,255,255,0.30)',
+        backdropFilter:'saturate(180%) blur(8px)',
         border:'1px solid var(--border-strong)',
         borderRadius:'9999px',
         boxShadow:'var(--shadow-2)',
