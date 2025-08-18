@@ -20,21 +20,21 @@ app.get('/api', (req, res) => {
   res.type('text/plain').send('Portfolio API is running.');
 });
 
-app.get('/api/health', (req, res) => res.json({ ok: true }));
+app.get('/health', (req, res) => res.json({ ok: true }));
 
-app.get('/api/categories', (req, res) => {
+app.get('/categories', (req, res) => {
   res.json(content.categories.map(({ slug, name, description }) => ({ slug, name, description })));
 });
 
-app.get('/api/categories/:slug', (req, res) => {
+app.get('/categories/:slug', (req, res) => {
   const cat = content.categories.find(c => c.slug === req.params.slug);
   if (!cat) return res.status(404).json({ error: 'Category not found' });
   res.json(cat);
 });
 
-app.get('/api/hackathons', (req, res) => res.json(content.hackathons));
-app.get('/api/courses', (req, res) => res.json(content.courses));
-app.get('/api/certifications', (req, res) => res.json(content.certifications));
+app.get('/hackathons', (req, res) => res.json(content.hackathons));
+app.get('/courses', (req, res) => res.json(content.courses));
+app.get('/certifications', (req, res) => res.json(content.certifications));
 
 module.exports = app;
 
