@@ -22,6 +22,7 @@ app.get('/api', (req, res) => {
 
 app.get('/health', (req, res) => res.json({ ok: true }));
 
+// API endpoints
 app.get('/categories', (req, res) => {
   res.json(content.categories.map(({ slug, name, description }) => ({ slug, name, description })));
 });
@@ -35,6 +36,11 @@ app.get('/categories/:slug', (req, res) => {
 app.get('/hackathons', (req, res) => res.json(content.hackathons));
 app.get('/courses', (req, res) => res.json(content.courses));
 app.get('/certifications', (req, res) => res.json(content.certifications));
+
+// Handle 404 for undefined routes
+app.use('*', (req, res) => {
+  res.status(404).json({ error: 'Route not found' });
+});
 
 module.exports = app;
 

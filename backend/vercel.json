@@ -1,11 +1,36 @@
 {
   "version": 2,
+  "functions": {
+    "api/index.js": {
+      "maxDuration": 30
+    },
+    "api/[...all].js": {
+      "maxDuration": 30
+    }
+  },
   "rewrites": [
-    { "source": "/", "destination": "/api" }
+    { "source": "/", "destination": "/api" },
+    { "source": "/api/(.*)", "destination": "/api/[...all]" },
+    { "source": "/api", "destination": "/api/index" }
   ],
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/[...all].js" },
-    { "src": "/api", "dest": "/api/index.js" }
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, PUT, DELETE, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, Authorization"
+        }
+      ]
+    }
   ]
 }
 

@@ -4,7 +4,31 @@ import { Link } from 'react-router-dom'
 
 export default function About(){
   const [categories, setCategories] = useState([])
-  useEffect(()=>{ api.getCategories().then(setCategories) }, [])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    setLoading(true)
+    api.getCategories()
+      .then(cats => {
+        setCategories(cats)
+        setLoading(false)
+      })
+      .catch(err => {
+        console.error('Failed to fetch categories:', err)
+        setError('Failed to load categories')
+        setLoading(false)
+      })
+  }, [])
+
+  // Default categories if API fails
+  const defaultCategories = [
+    { slug: 'mern', name: 'MERN', description: 'Full-stack projects using MongoDB, Express, React, and Node' },
+    { slug: 'ui-ux', name: 'UI/UX', description: 'Design systems and prototypes focused on usability' },
+    { slug: 'android', name: 'Android', description: 'Native apps with Kotlin and Material design' }
+  ]
+
+  const displayCategories = categories.length > 0 ? categories : defaultCategories
 
   return (
     <div>
@@ -38,59 +62,45 @@ export default function About(){
       <section id="featured" className="section featured" style={{marginTop: 10}}>
         <h2>Featured Highlights</h2>
 
-        {/* MERN Row */}
-        <div className="highlight-row theme-mern" style={{marginTop: 40}}>
-          <div className="text">
-            <Link to="/category/mern" className="pill" style={{marginBottom: 12, background:'#E3F2FD', color:'#1565C0'}}>MERN</Link>
-            <h3 style={{margin:'0 0 8px 0'}}>Full‑stack Projects</h3>
-            <p style={{color:'var(--color-muted)', lineHeight:1.6}}>End‑to‑end products using MongoDB, Express, React, and Node. Real‑world apps with authentication, dashboards, and clean UI systems.</p>
-            <ul style={{margin:'12px 0 0 18px', color:'var(--color-muted)'}}>
-              <li>Project 1 – E‑commerce admin + storefront</li>
-              <li>Project 2 – Realtime chat with sockets</li>
-              <li>Project 3 – Portfolio CMS</li>
-            </ul>
-          </div>
-          <div className="media">
-            <img src="/highlight/mern-demo.svg" alt="MERN project previews" />
-          </div>
-        </div>
+        {/* Dynamic Categories */}
+        {displayCategories.map((category, index) => {
+          const isReversed = index % 2 === 1
+          const themeClass = `theme-${category.slug}`
+          
+          return (
+            <div key={category.slug} className={`highlight-row ${isReversed ? 'reverse' : ''} ${themeClass}`} style={{marginTop: index === 0 ? 40 : 0}}>
+              <div className="text">
+                <Link to={`/category/${category.slug}`} className="pill" style={{
+                  marginBottom: 12, 
+                  background: getCategoryColor(category.slug).bg, 
+                  color: getCategoryColor(category.slug).text
+                }}>
+                  {category.name}
+                </Link>
+                <h3 style={{margin:'0 0 8px 0'}}>{getCategoryTitle(category.slug)}</h3>
+                <p style={{color:'var(--color-muted)', lineHeight:1.6}}>{getCategoryDescription(category.slug)}</p>
+                <ul style={{margin:'12px 0 0 18px', color:'var(--color-muted)'}}>
+                  {getCategoryFeatures(category.slug).map((feature, i) => (
+                    <li key={i}>{feature}</li>
+                  ))}
+                </ul>
+              </div>
+              <div className="media">
+                <img src={`/highlight/${category.slug}-demo.svg`} alt={`${category.name} previews`} />
+              </div>
+            </div>
+          )
+        })}
 
-        {/* UI/UX Row (reversed) */}
-        <div className="highlight-row reverse theme-uiux">
-          <div className="text">
-            <Link to="/category/ui-ux" className="pill" style={{marginBottom: 12, background:'#F3E5F5', color:'#7B1FA2'}}>UI/UX</Link>
-            <h3 style={{margin:'0 0 8px 0'}}>Design Systems & Prototypes</h3>
-            <p style={{color:'var(--color-muted)', lineHeight:1.6}}>Design explorations, component libraries, and prototype flows focused on usability and accessibility.</p>
-            <ul style={{margin:'12px 0 0 18px', color:'var(--color-muted)'}}>
-              <li>Atomic design component kit</li>
-              <li>Usability studies and reports</li>
-              <li>Interactive prototypes</li>
-            </ul>
+        {/* API Status Message */}
+        {error && (
+          <div style={{textAlign:'center', padding:'20px', marginTop:'20px'}}>
+            <p style={{color:'var(--color-muted)', fontSize:'0.9rem'}}>
+              Using fallback data. Backend connection unavailable.
+            </p>
           </div>
-          <div className="media">
-            <img src="/highlight/uiux-demo.svg" alt="UI/UX prototypes" />
-          </div>
-        </div>
-
-        {/* Android Row */}
-        <div className="highlight-row theme-android">
-          <div className="text">
-            <Link to="/category/android" className="pill" style={{marginBottom: 12, background:'#E8F5E9', color:'#2E7D32'}}>Android</Link>
-            <h3 style={{margin:'0 0 8px 0'}}>Native Apps & Experiments</h3>
-            <p style={{color:'var(--color-muted)', lineHeight:1.6}}>Android apps with Kotlin, Jetpack, and Material design. Performance‑minded with offline‑first patterns.</p>
-            <ul style={{margin:'12px 0 0 18px', color:'var(--color-muted)'}}>
-              <li>Notes app with sync</li>
-              <li>Habit tracker</li>
-              <li>Widget experiments</li>
-            </ul>
-          </div>
-          <div className="media">
-            <img src="/highlight/android-demo.svg" alt="Android app previews" />
-          </div>
-        </div>
+        )}
       </section>
-
-      {/* Categories Section removed as requested */}
 
       {/* Certifications Section */}
       <section className="section certs" style={{marginTop: 48, marginBottom: 48}}>
@@ -126,6 +136,55 @@ export default function About(){
       </section>
     </div>
   )
+}
+
+// Helper functions for category data
+function getCategoryColor(slug) {
+  const colors = {
+    'mern': { bg: '#E3F2FD', text: '#1565C0' },
+    'ui-ux': { bg: '#F3E5F5', text: '#7B1FA2' },
+    'android': { bg: '#E8F5E9', text: '#2E7D32' }
+  }
+  return colors[slug] || { bg: '#F5F5F5', text: '#424242' }
+}
+
+function getCategoryTitle(slug) {
+  const titles = {
+    'mern': 'Full‑stack Projects',
+    'ui-ux': 'Design Systems & Prototypes',
+    'android': 'Native Apps & Experiments'
+  }
+  return titles[slug] || 'Category Projects'
+}
+
+function getCategoryDescription(slug) {
+  const descriptions = {
+    'mern': 'End‑to‑end products using MongoDB, Express, React, and Node. Real‑world apps with authentication, dashboards, and clean UI systems.',
+    'ui-ux': 'Design explorations, component libraries, and prototype flows focused on usability and accessibility.',
+    'android': 'Android apps with Kotlin, Jetpack, and Material design. Performance‑minded with offline‑first patterns.'
+  }
+  return descriptions[slug] || 'Projects and experiments in this category.'
+}
+
+function getCategoryFeatures(slug) {
+  const features = {
+    'mern': [
+      'Project 1 – E‑commerce admin + storefront',
+      'Project 2 – Realtime chat with sockets',
+      'Project 3 – Portfolio CMS'
+    ],
+    'ui-ux': [
+      'Atomic design component kit',
+      'Usability studies and reports',
+      'Interactive prototypes'
+    ],
+    'android': [
+      'Notes app with sync',
+      'Habit tracker',
+      'Widget experiments'
+    ]
+  }
+  return features[slug] || ['Project 1', 'Project 2', 'Project 3']
 }
 
 
