@@ -7,20 +7,30 @@ export default function Category(){
   const { slug } = useParams()
   const [cat, setCat] = useState(null)
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    setLoading(true)
     setError('')
     
     api.getCategory(slug)
       .then(categoryData => {
         setCat(categoryData)
+        setLoading(false)
       })
       .catch(err => {
         console.error('Failed to fetch category:', err)
         setError('Category not found or backend unavailable')
+        setLoading(false)
       })
   }, [slug])
 
+  if (loading) return (
+    <div className="section" style={{display:'grid', placeItems:'center', minHeight:'60vh'}}>
+      <div className="spinner" aria-label="Loading" role="status" />
+    </div>
+  )
+  
   if (error) return (
     <div className="section">
       <BackButton />
@@ -39,38 +49,26 @@ export default function Category(){
     </div>
   )
   
-  if (!cat) return (
-    <div className="section">
-      <BackButton />
-      <div style={{textAlign:'center', paddingTop:40}}>
-        <h2>No Data Available</h2>
-        <p style={{color:'var(--color-muted)'}}>
-          This category doesn't have any content yet.
-        </p>
-      </div>
-    </div>
-  )
+  if (!cat) return null
 
   return (
     <div className="section" style={{position:'relative'}}>
       <BackButton />
-      {cat && (
-        <div style={{textAlign:'center', paddingTop:40, marginBottom:28}}>
-          <h1 style={{
-            margin:'0 0 8px 0',
-            fontSize:'clamp(28px, 6vw, 56px)'
-          }}>{cat.name}</h1>
-          <p style={{
-            color:'var(--color-muted)',
-            margin:'0 auto',
-            fontSize:'clamp(16px, 2.2vw, 20px)',
-            maxWidth:800
-          }}>{cat.description}</p>
-        </div>
-      )}
+      <div style={{textAlign:'center', paddingTop:40, marginBottom:28}}>
+        <h1 style={{
+          margin:'0 0 8px 0',
+          fontSize:'clamp(28px, 6vw, 56px)'
+        }}>{cat.name}</h1>
+        <p style={{
+          color:'var(--color-muted)',
+          margin:'0 auto',
+          fontSize:'clamp(16px, 2.2vw, 20px)',
+          maxWidth:800
+        }}>{cat.description}</p>
+      </div>
 
       {/* Projects Section */}
-      {cat && cat.projects && cat.projects.length > 0 && (
+      {cat.projects && cat.projects.length > 0 && (
         <section style={{marginBottom: 48}}>
           <h3 style={{fontSize: '1.6rem', marginBottom: 24}}>Projects in {cat.name}</h3>
           <div className="grid" style={{gridTemplateColumns:'1fr'}}>
@@ -102,7 +100,7 @@ export default function Category(){
       )}
 
       {/* Certifications Section */}
-      {cat && cat.certifications && cat.certifications.length > 0 && (
+      {cat.certifications && cat.certifications.length > 0 && (
         <section>
           <h3 style={{fontSize: '1.4rem', marginBottom: 24}}>Certifications in {cat.name}</h3>
           <div className="grid" style={{gridTemplateColumns:'1fr'}}>
@@ -124,7 +122,7 @@ export default function Category(){
       )}
 
       {/* No Content Message */}
-      {cat && (!cat.projects || cat.projects.length === 0) && 
+      {(!cat.projects || cat.projects.length === 0) && 
        (!cat.certifications || cat.certifications.length === 0) && (
         <div style={{textAlign:'center', padding:'40px 20px'}}>
           <p style={{color:'var(--color-muted)', fontSize:'1.1rem'}}>
