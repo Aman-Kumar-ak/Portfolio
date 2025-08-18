@@ -11,9 +11,10 @@ a{
   text-decoration: none;
 }
 .container{
-  max-width: 1280px;
+  max-width: 1440px;
   margin: 0 auto;
   padding: 24px;
+  padding-bottom: 50px;
 }
 .header{
   position:sticky;top:0;z-index:20;
@@ -72,19 +73,7 @@ a{
   display: grid;
   gap: 18px;
 }
-.grid-3{
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-@media (max-width: 900px){
-  .grid-3{
-    grid-template-columns: 1fr 1fr;
-  }
-}
-@media (max-width: 640px){
-  .grid-3{
-    grid-template-columns: 1fr;
-  }
-}
+/* grid-3 removed with Explore Categories */
 /* Hero layout: near full viewport with centered title and body grid */
 .hero{
   min-height: calc(100vh - 110px);
@@ -147,6 +136,17 @@ a{
   margin: 0 0 12px 0;
 }
 
+/* Featured section container */
+.section.featured{
+  position: relative;
+  padding-top: 12px;
+}
+.section.featured h2{
+  font-size: clamp(24px, 3vw, 32px);
+  text-align: center;
+  color: var(--color-heading);
+}
+
 /* Alternating highlights layout */
 .highlight-row{
   display: grid;
@@ -154,6 +154,8 @@ a{
   gap: 28px;
   align-items: center;
   margin: 28px 0;
+  position: relative;
+  isolation: isolate;
 }
 .highlight-row .media{
   width: 100%;
@@ -171,6 +173,33 @@ a{
   border: 1px solid var(--border-weak);
   box-shadow: var(--shadow-1);
   display: block;
+}
+.highlight-row .text h3{
+  font-size: clamp(18px, 2.2vw, 26px);
+  margin: 0 0 8px 0;
+}
+.highlight-row .text p{ margin: 0 0 8px 0; }
+.highlight-row .text ul{ margin: 10px 0 0 18px; padding: 0; }
+.highlight-row .actions{ display:flex; gap:12px; margin-top:14px; }
+
+/* Ambient row glow background by theme */
+.highlight-row::before{
+  content: "";
+  position: absolute;
+  inset: -6px -8px;
+  border-radius: 22px;
+  filter: blur(20px);
+  opacity: .45;
+  z-index: -1;
+}
+.highlight-row.theme-mern::before{
+  background: linear-gradient(90deg, rgba(227,242,253,.55), rgba(255,224,181,.35));
+}
+.highlight-row.theme-uiux::before{
+  background: linear-gradient(90deg, rgba(243,229,245,.55), rgba(255,224,181,.30));
+}
+.highlight-row.theme-android::before{
+  background: linear-gradient(90deg, rgba(232,245,233,.55), rgba(255,224,181,.30));
 }
 .highlight-row.reverse{
   grid-template-columns: .9fr 1.1fr;
@@ -213,3 +242,50 @@ a{
 }
 
 
+/* Certifications section */
+.section.certs{
+  position: relative;
+}
+.section.certs .section-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.certs-grid{
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.cert-card{
+  position: relative;
+  background: #fff;
+  border: 1px solid var(--border-weak);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: var(--shadow-1);
+  transition: transform .2s ease, box-shadow .2s ease;
+  isolation: isolate;
+}
+.cert-card:hover{
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-2);
+}
+.cert-card::before{
+  content: "";
+  position: absolute;
+  inset: -6px -8px;
+  border-radius: 22px;
+  filter: blur(18px);
+  opacity: .4;
+  z-index: -1;
+}
+.cert-card.t-mern::before{
+  background: linear-gradient(90deg, rgba(227,242,253,.55), rgba(255,224,181,.35));
+}
+.cert-card.t-uiux::before{
+  background: linear-gradient(90deg, rgba(243,229,245,.55), rgba(255,224,181,.30));
+}
+.cert-card.t-android::before{
+  background: linear-gradient(90deg, rgba(232,245,233,.55), rgba(255,224,181,.30));
+}

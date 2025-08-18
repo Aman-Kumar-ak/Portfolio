@@ -16,14 +16,24 @@ export default function Category(){
   if (!cat) return <div className="section">Loading...</div>
 
   return (
-    <div className="section">
+    <div className="section" style={{position:'relative'}}>
       <BackButton />
-      <h2 style={{marginBottom:6}}>{cat.name}</h2>
-      <p style={{color:'var(--color-muted)', marginTop:0}}>{cat.description}</p>
+      <div style={{textAlign:'center', paddingTop:40, marginBottom:28}}>
+        <h1 style={{
+          margin:'0 0 8px 0',
+          fontSize:'clamp(28px, 6vw, 56px)'
+        }}>{cat.name}</h1>
+        <p style={{
+          color:'var(--color-muted)',
+          margin:'0 auto',
+          fontSize:'clamp(16px, 2.2vw, 20px)',
+          maxWidth:800
+        }}>{cat.description}</p>
+      </div>
 
       {/* Projects Section */}
       <section style={{marginBottom: 48}}>
-        <h3 style={{fontSize: '1.4rem', marginBottom: 24}}>Projects in {cat.name}</h3>
+        <h3 style={{fontSize: '1.6rem', marginBottom: 24}}>Projects in {cat.name}</h3>
         <div className="grid" style={{gridTemplateColumns:'1fr'}}>
           {cat.projects?.map((p, idx) => (
             <div key={idx} className="card" style={{padding:18}}>

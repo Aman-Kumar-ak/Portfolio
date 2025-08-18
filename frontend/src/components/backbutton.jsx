@@ -8,16 +8,16 @@ const BackButton = () => {
     <button
       onClick={() => navigate(-1)}
       style={{
-        position: 'fixed',
-        top: 24,
-        left: 24,
+        position: 'absolute',
+        top: 0,
+        left: 0,
         zIndex: 50,
         background: '#FFF5E9',
         border: 'none',
         borderRadius: '50%',
         boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
-        width: 56,
-        height: 56,
+        width: 48,
+        height: 48,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

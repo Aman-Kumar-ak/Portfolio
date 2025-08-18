@@ -7,9 +7,11 @@ export default function Hackathons(){
   useEffect(()=>{ api.getHackathons().then(setItems) }, [])
 
   return (
-    <section className="section">
-      <BackButton />
-      <h2>Hackathons</h2>
+    <section className="section" style={{position:'relative'}}>
+      <div style={{position:'relative', paddingTop:16, marginBottom:18}}>
+        <BackButton />
+        <h2 style={{textAlign:'center', margin:0, fontSize:'clamp(28px, 6vw, 46px)'}}>Hackathons</h2>
+      </div>
       <div className="grid" style={{gridTemplateColumns:'1fr'}}>
         {items.map((h, i) => (
           <div key={i} className="card" style={{padding:18}}>
