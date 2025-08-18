@@ -1,0 +1,20 @@
+:root{
+  /* Light theme palette */
+  --color-bg: #FFFFFF;       /* background */
+  --color-surface: #FFFFFF;  /* cards, surfaces */
+  --color-primary: #F9C784;  /* warm accent */
+  --color-accent: #96CDFF;   /* soft accent (light blue) */
+  --color-highlight: #FFE0B5;/* pale highlight */
+  --color-text: #2B2B2B;     /* primary text */
+  --color-muted: #6B7280;    /* secondary text */
+
+  --radius-xl: 9999px;
+  --radius-lg: 16px;
+  --radius-md: 10px;
+  --shadow-1: 0 8px 24px rgba(0,0,0,0.08);
+  --shadow-2: 0 16px 36px rgba(0,0,0,0.10);
+  --border-weak: rgba(0,0,0,0.08);
+  --border-strong: rgba(0,0,0,0.15);
+}
+
+
