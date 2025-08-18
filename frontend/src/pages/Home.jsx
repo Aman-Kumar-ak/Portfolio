@@ -44,7 +44,7 @@ export default function About(){
               <span className="pill">Accessibility</span>
               <span className="pill">Prototyping</span>
               <span className="pill">Performance</span>
-              <span className="pill">TypeScript/React</span>
+              <span className="pill">React</span>
             </div>
 
             <div className="cta">
