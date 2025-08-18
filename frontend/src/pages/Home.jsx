@@ -53,7 +53,7 @@ export default function About(){
             </div>
           </div>
           <div className="hero-media">
-            <img className="photo" src="/hero-image/aman.jpg" alt="Aman portrait" />
+            <img className="photo" src="/hero-image/aman.jpg" alt="Aman portrait" loading="eager" fetchpriority="high" decoding="async" />
           </div>
         </div>
       </section>
@@ -62,8 +62,10 @@ export default function About(){
       <section id="featured" className="section featured" style={{marginTop: 10}}>
         <h2>Featured Highlights</h2>
 
-        {/* Dynamic Categories */}
-        {displayCategories.map((category, index) => {
+        {/* Dynamic Categories (filter out Data Annotator & Startup Ideas) */}
+        {displayCategories
+          .filter(cat => ['mern', 'ui-ux', 'android'].includes(cat.slug))
+          .map((category, index) => {
           const isReversed = index % 2 === 1
           const themeClass = `theme-${category.slug}`
           
@@ -86,7 +88,7 @@ export default function About(){
                 </ul>
               </div>
               <div className="media">
-                <img src={`/highlight/${category.slug}-demo.svg`} alt={`${category.name} previews`} />
+                <img src={`/highlight/${getCategoryImageFilename(category.slug)}`} alt={`${category.name} previews`} />
               </div>
             </div>
           )
@@ -185,6 +187,15 @@ function getCategoryFeatures(slug) {
     ]
   }
   return features[slug] || ['Project 1', 'Project 2', 'Project 3']
+}
+
+function getCategoryImageFilename(slug) {
+  const map = {
+    'mern': 'mern-demo.svg',
+    'ui-ux': 'uiux-demo.svg',
+    'android': 'android-demo.svg'
+  }
+  return map[slug] || `${slug}-demo.svg`
 }
 
 

@@ -7,33 +7,20 @@ export default function Category(){
   const { slug } = useParams()
   const [cat, setCat] = useState(null)
   const [error, setError] = useState('')
-  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    setLoading(true)
     setError('')
     
     api.getCategory(slug)
       .then(categoryData => {
         setCat(categoryData)
-        setLoading(false)
       })
       .catch(err => {
         console.error('Failed to fetch category:', err)
         setError('Category not found or backend unavailable')
-        setLoading(false)
       })
   }, [slug])
 
-  if (loading) return (
-    <div className="section">
-      <BackButton />
-      <div style={{textAlign:'center', paddingTop:40}}>
-        <h2>Loading category...</h2>
-      </div>
-    </div>
-  )
-  
   if (error) return (
     <div className="section">
       <BackButton />
@@ -67,21 +54,23 @@ export default function Category(){
   return (
     <div className="section" style={{position:'relative'}}>
       <BackButton />
-      <div style={{textAlign:'center', paddingTop:40, marginBottom:28}}>
-        <h1 style={{
-          margin:'0 0 8px 0',
-          fontSize:'clamp(28px, 6vw, 56px)'
-        }}>{cat.name}</h1>
-        <p style={{
-          color:'var(--color-muted)',
-          margin:'0 auto',
-          fontSize:'clamp(16px, 2.2vw, 20px)',
-          maxWidth:800
-        }}>{cat.description}</p>
-      </div>
+      {cat && (
+        <div style={{textAlign:'center', paddingTop:40, marginBottom:28}}>
+          <h1 style={{
+            margin:'0 0 8px 0',
+            fontSize:'clamp(28px, 6vw, 56px)'
+          }}>{cat.name}</h1>
+          <p style={{
+            color:'var(--color-muted)',
+            margin:'0 auto',
+            fontSize:'clamp(16px, 2.2vw, 20px)',
+            maxWidth:800
+          }}>{cat.description}</p>
+        </div>
+      )}
 
       {/* Projects Section */}
-      {cat.projects && cat.projects.length > 0 && (
+      {cat && cat.projects && cat.projects.length > 0 && (
         <section style={{marginBottom: 48}}>
           <h3 style={{fontSize: '1.6rem', marginBottom: 24}}>Projects in {cat.name}</h3>
           <div className="grid" style={{gridTemplateColumns:'1fr'}}>
@@ -113,7 +102,7 @@ export default function Category(){
       )}
 
       {/* Certifications Section */}
-      {cat.certifications && cat.certifications.length > 0 && (
+      {cat && cat.certifications && cat.certifications.length > 0 && (
         <section>
           <h3 style={{fontSize: '1.4rem', marginBottom: 24}}>Certifications in {cat.name}</h3>
           <div className="grid" style={{gridTemplateColumns:'1fr'}}>
@@ -135,7 +124,7 @@ export default function Category(){
       )}
 
       {/* No Content Message */}
-      {(!cat.projects || cat.projects.length === 0) && 
+      {cat && (!cat.projects || cat.projects.length === 0) && 
        (!cat.certifications || cat.certifications.length === 0) && (
         <div style={{textAlign:'center', padding:'40px 20px'}}>
           <p style={{color:'var(--color-muted)', fontSize:'1.1rem'}}>
