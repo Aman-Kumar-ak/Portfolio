@@ -2,10 +2,105 @@ import { useEffect, useState } from 'react'
 import api from '../api'
 import { Link } from 'react-router-dom'
 
+// Contact Form Component - moved outside to prevent recreation
+function ContactForm({ formData, contactStatus, contactLoading, onContactChange, onContactSubmit, onCloseAlert }) {
+  return (
+    <div className="contact-container">
+      {contactStatus.message && (
+        <div className={`contact-alert ${contactStatus.type === 'success' ? 'success' : 'error'}`}>
+          <span className="alert-message">{contactStatus.message}</span>
+          <button 
+            type="button" 
+            className="alert-close-btn" 
+            onClick={onCloseAlert}
+            aria-label="Close notification"
+          >
+            ×
+          </button>
+        </div>
+      )}
+      
+      <form onSubmit={onContactSubmit} className="contact-form">
+        <div className="form-row">
+          <div className="form-group">
+            <label htmlFor="name">Name *</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={onContactChange}
+              required
+              placeholder="Your name"
+            />
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="email">Email *</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={onContactChange}
+              required
+              placeholder="your.email@example.com"
+            />
+          </div>
+        </div>
+        
+        <div className="form-group">
+          <label htmlFor="subject">Subject *</label>
+          <input
+            type="text"
+            id="subject"
+            name="subject"
+            value={formData.subject}
+            onChange={onContactChange}
+            required
+            placeholder="What's this about?"
+          />
+        </div>
+        
+        <div className="form-group">
+          <label htmlFor="message">Message *</label>
+          <textarea
+            id="message"
+            name="message"
+            value={formData.message}
+            onChange={onContactChange}
+            required
+            rows="6"
+            placeholder="Tell me more about your inquiry..."
+          />
+        </div>
+        
+        <button
+          type="submit"
+          disabled={contactLoading}
+          className="contact-submit-btn"
+        >
+          {contactLoading ? 'Sending...' : 'Send Message'}
+        </button>
+      </form>
+    </div>
+  )
+}
+
 export default function About(){
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  
+  // Contact form state
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  })
+  const [contactLoading, setContactLoading] = useState(false)
+  const [contactStatus, setContactStatus] = useState({ type: '', message: '' })
 
   useEffect(() => {
     setLoading(true)
@@ -29,6 +124,48 @@ export default function About(){
   ]
 
   const displayCategories = categories.length > 0 ? categories : defaultCategories
+
+  // Contact form handlers
+  const handleContactChange = (e) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  const handleContactSubmit = async (e) => {
+    e.preventDefault()
+    setContactLoading(true)
+    setContactStatus({ type: '', message: '' })
+
+    try {
+      const response = await api.sendContactMessage(formData)
+      
+      if (response.success) {
+        setContactStatus({ type: 'success', message: response.message })
+        setFormData({ name: '', email: '', subject: '', message: '' })
+        // Auto-dismiss success message after 5 seconds
+        setTimeout(() => {
+          setContactStatus({ type: '', message: '' })
+        }, 5000)
+      } else {
+        setContactStatus({ type: 'error', message: response.error })
+      }
+    } catch (error) {
+      setContactStatus({ 
+        type: 'error', 
+        message: 'Failed to send message. Please try again later.' 
+      })
+    } finally {
+      setContactLoading(false)
+    }
+  }
+
+  // Close alert handler
+  const handleCloseAlert = () => {
+    setContactStatus({ type: '', message: '' })
+  }
 
   return (
     <div>
@@ -133,6 +270,57 @@ export default function About(){
             <div style={{fontSize: '1.1rem', marginBottom: 4, fontWeight: 500}}>Google</div>
             <p style={{margin: '0 0 16px 0', color: 'var(--color-muted)'}}>Android Development with Kotlin</p>
             <a href="#" className="btn" style={{padding: '8px 16px', fontSize: '0.95rem', background: '#E8F5E9', color: '#2E7D32', border: 'none'}}>View Certificate</a>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section - Integrated at bottom */}
+      <section className="section contact" style={{marginTop: 48, marginBottom: 48}}>
+        <div className="section-header">
+          <h2 style={{margin:0}}>Get In Touch</h2>
+        </div>
+        
+        <div className="contact-highlight-row">
+          <div className="contact-text">
+            <div className="contact-info">
+              <h3 style={{margin:'0 0 16px 0', fontSize:'clamp(20px, 2.5vw, 28px)', color:'var(--color-heading)'}}>
+                Let's Build Something Amazing Together
+              </h3>
+              <p style={{color:'var(--color-muted)', lineHeight:1.6, marginBottom: 24}}>
+                I'm always excited to collaborate on new projects, discuss ideas, or help solve technical challenges. Whether you have a specific project in mind or just want to chat about technology, I'd love to hear from you.
+              </p>
+              
+              <div className="contact-methods">
+                <div className="contact-method">
+                  <div className="contact-icon">📧</div>
+                  <div>
+                    <h4 style={{margin:'0 0 4px 0', fontSize:'1rem'}}>Email</h4>
+                    <a href="mailto:lifepointsaman@gmail.com" className="contact-link">
+                      lifepointsaman@gmail.com
+                    </a>
+                  </div>
+                </div>
+                
+                <div className="contact-method">
+                  <div className="contact-icon">💼</div>
+                  <div>
+                    <h4 style={{margin:'0 0 4px 0', fontSize:'1rem'}}>Projects</h4>
+                    <p style={{margin:0, color:'var(--color-muted)', fontSize:'0.9rem'}}>Available for freelance work</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="contact-form-container">
+            <ContactForm 
+              formData={formData}
+              contactStatus={contactStatus}
+              contactLoading={contactLoading}
+              onContactChange={handleContactChange}
+              onContactSubmit={handleContactSubmit}
+              onCloseAlert={handleCloseAlert}
+            />
           </div>
         </div>
       </section>

@@ -13,12 +13,11 @@ export default function BottomCapsuleNav(){
     // Ensure order and include About first
     const order = ['home','mern','ui-ux','android','data-annotator','startup-ideas']
     const home = { key: 'home', label: 'Home', to: '/' }
-    const contact = { key: 'contact', label: 'Contact', to: '/contact' }
     const byKey = Object.fromEntries(mapped.map(m => [m.key, m]))
     const ordered = order
       .map(k => k === 'home' ? home : byKey[k])
       .filter(Boolean)
-    return [...ordered, contact]
+    return ordered
   }, [cats])
 
   return (
