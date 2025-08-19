@@ -1,13 +1,20 @@
 const nodemailer = require('nodemailer');
 
-// Create transporter
+// Create transporter with fallback for different Nodemailer versions
 const createTransporter = () => {
   // Check if environment variables are set
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
     throw new Error('Missing email environment variables: EMAIL_USER or EMAIL_PASS');
   }
   
-  return nodemailer.createTransporter({
+  // Handle different Nodemailer versions
+  const createTransportMethod = nodemailer.createTransport || nodemailer.createTransporter;
+  
+  if (!createTransportMethod) {
+    throw new Error('Nodemailer createTransport method not found. Please check Nodemailer installation.');
+  }
+  
+  return createTransportMethod({
     service: 'gmail',
     auth: {
       user: process.env.EMAIL_USER,
@@ -57,6 +64,12 @@ const sendEmail = async (emailData) => {
       EMAIL_USER: process.env.EMAIL_USER ? 'Set' : 'Missing',
       EMAIL_PASS: process.env.EMAIL_PASS ? 'Set' : 'Missing',
       EMAIL_TO: process.env.EMAIL_TO ? 'Set' : 'Missing'
+    });
+    console.error('Nodemailer check:', {
+      nodemailerType: typeof nodemailer,
+      createTransport: typeof nodemailer.createTransport,
+      createTransporter: typeof nodemailer.createTransporter,
+      nodemailerKeys: Object.keys(nodemailer)
     });
     return { success: false, error: error.message };
   }
