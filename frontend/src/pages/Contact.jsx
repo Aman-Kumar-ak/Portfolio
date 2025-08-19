@@ -217,7 +217,7 @@ export default function Contact() {
                  <div style={{textAlign: 'center', marginTop: 24, color: '#666'}}>
            <p>You can also reach me directly at:</p>
            <p style={{fontWeight: '500', color: '#333'}}>
-             <a href="mailto:aman.portfolio@gmail.com" style={{color: '#007bff', textDecoration: 'none'}}>
+             <a href="mailto:lifepointsaman@gmail.com" style={{color: '#007bff', textDecoration: 'none'}}>
                lifepointsaman@gmail.com
              </a>
            </p>
