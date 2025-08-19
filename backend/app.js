@@ -69,9 +69,10 @@ app.post('/contact', async (req, res) => {
         message: 'Message sent successfully! I will get back to you soon.' 
       });
     } else {
+      console.error('Email sending failed:', result.error);
       res.status(500).json({ 
         success: false, 
-        error: 'Failed to send message. Please try again later.' 
+        error: result.error || 'Failed to send message. Please try again later.' 
       });
     }
   } catch (error) {

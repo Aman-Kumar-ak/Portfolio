@@ -2,6 +2,11 @@ const nodemailer = require('nodemailer');
 
 // Create transporter
 const createTransporter = () => {
+  // Check if environment variables are set
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    throw new Error('Missing email environment variables: EMAIL_USER or EMAIL_PASS');
+  }
+  
   return nodemailer.createTransporter({
     service: 'gmail',
     auth: {
@@ -48,6 +53,11 @@ const sendEmail = async (emailData) => {
     return { success: true, messageId: result.messageId };
   } catch (error) {
     console.error('Email sending failed:', error);
+    console.error('Environment check:', {
+      EMAIL_USER: process.env.EMAIL_USER ? 'Set' : 'Missing',
+      EMAIL_PASS: process.env.EMAIL_PASS ? 'Set' : 'Missing',
+      EMAIL_TO: process.env.EMAIL_TO ? 'Set' : 'Missing'
+    });
     return { success: false, error: error.message };
   }
 };
