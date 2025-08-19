@@ -4,6 +4,7 @@ import Category from './pages/Category'
 import Hackathons from './pages/Hackathons'
 import Courses from './pages/Courses'
 import Certifications from './pages/Certifications'
+import Contact from './pages/Contact'
 import BottomCapsuleNav from './components/BottomCapsuleNav'
 
 export default function App(){
@@ -19,6 +20,7 @@ export default function App(){
           <Route path="/hackathons" element={<Hackathons/>}/>
           <Route path="/courses" element={<Courses/>}/>
           <Route path="/certifications" element={<Certifications/>}/>
+          <Route path="/contact" element={<Contact/>}/>
         </Routes>
       </main>
 

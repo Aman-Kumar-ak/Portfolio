@@ -4,7 +4,26 @@ import api from '../api'
 
 export default function Certifications(){
   const [items, setItems] = useState([])
-  useEffect(()=>{ api.getCertifications().then(setItems) }, [])
+  const [loading, setLoading] = useState(true)
+  
+  useEffect(()=>{ 
+    setLoading(true)
+    api.getCertifications()
+      .then(data => {
+        setItems(data)
+        setLoading(false)
+      })
+      .catch(err => {
+        console.error('Failed to fetch certifications:', err)
+        setLoading(false)
+      })
+  }, [])
+
+  if (loading) return (
+    <div className="section" style={{display:'grid', placeItems:'center', minHeight:'60vh'}}>
+      <div className="spinner" aria-label="Loading" role="status" />
+    </div>
+  )
 
   return (
     <section className="section" style={{position:'relative'}}>

@@ -3,6 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const content = require('./data/content');
+const { sendEmail } = require('./utils/email');
 
 const app = express();
 
@@ -36,6 +37,51 @@ app.get('/categories/:slug', (req, res) => {
 app.get('/hackathons', (req, res) => res.json(content.hackathons));
 app.get('/courses', (req, res) => res.json(content.courses));
 app.get('/certifications', (req, res) => res.json(content.certifications));
+
+// Contact form endpoint
+app.post('/contact', async (req, res) => {
+  try {
+    const { name, email, subject, message } = req.body;
+    
+    // Basic validation
+    if (!name || !email || !subject || !message) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'All fields are required' 
+      });
+    }
+    
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Please enter a valid email address' 
+      });
+    }
+    
+    // Send email
+    const result = await sendEmail({ name, email, subject, message });
+    
+    if (result.success) {
+      res.json({ 
+        success: true, 
+        message: 'Message sent successfully! I will get back to you soon.' 
+      });
+    } else {
+      res.status(500).json({ 
+        success: false, 
+        error: 'Failed to send message. Please try again later.' 
+      });
+    }
+  } catch (error) {
+    console.error('Contact endpoint error:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Internal server error. Please try again later.' 
+    });
+  }
+});
 
 // Handle 404 for undefined routes
 app.use('*', (req, res) => {

@@ -67,6 +67,28 @@ const api = {
 			console.error('API Error:', error);
 			return [];
 		}
+	},
+	
+	async sendContactMessage(formData) {
+		try {
+			const r = await fetch(`${API_BASE}/api/contact`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(formData)
+			});
+			
+			if (!r.ok) {
+				const errorData = await r.json();
+				throw new Error(errorData.error || 'Failed to send message');
+			}
+			
+			return r.json();
+		} catch (error) {
+			console.error('Contact API Error:', error);
+			throw error;
+		}
 	}
 }
 
